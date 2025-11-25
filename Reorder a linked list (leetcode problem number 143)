@@ -1,0 +1,32 @@
+void reorderList(struct ListNode* head) {
+    if (head == NULL || head -> next == NULL || head -> next -> next == NULL) {
+        return;
+    }
+    struct ListNode *slow = head;
+    struct ListNode *fast = head;
+    while (fast -> next != NULL && fast -> next -> next != NULL) {
+        slow = slow -> next;
+        fast = fast -> next -> next;
+    }
+    struct ListNode *prev = NULL;
+    struct ListNode *curr = slow -> next;
+    struct ListNode *next;
+    while (curr) {
+        next = curr -> next;
+        curr -> next = prev;
+        prev = curr;
+        curr = next;
+    }
+    slow -> next = NULL;
+    struct ListNode *a = head;
+    struct ListNode *b = prev;
+    while (a && b) {
+        struct ListNode *aNext = a -> next;
+        struct ListNode *bNext = b -> next;
+        a -> next = b;
+        b -> next = aNext;
+        a = aNext;
+        b = bNext;
+    }
+
+}
