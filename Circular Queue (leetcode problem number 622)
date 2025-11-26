@@ -1,0 +1,66 @@
+
+typedef struct {
+    int *arr;
+    int head;
+    int tail;
+    int size;
+    int cap;    
+} MyCircularQueue;
+
+
+MyCircularQueue* myCircularQueueCreate(int k) {
+    MyCircularQueue *q = (MyCircularQueue *)malloc(sizeof(MyCircularQueue));
+    int *array = (int *)malloc(sizeof(int) * k);
+    q -> arr = array;
+    q -> cap = k;
+    q -> head = 0;
+    q -> tail = 0;
+    q -> size = 0;
+    return q;    
+}
+
+bool myCircularQueueEnQueue(MyCircularQueue* obj, int value) {
+    if (obj -> size >= obj -> cap) {
+        return false;
+    }       
+    obj -> arr[obj -> tail] = value;
+    obj -> size++;
+    obj -> tail = (obj -> tail + 1) % obj -> cap;
+    return true;   
+}
+
+bool myCircularQueueDeQueue(MyCircularQueue* obj) {
+    if (obj -> size == 0) {
+        return false;
+    }
+    obj -> head = (obj -> head + 1) % obj -> cap;
+    obj -> size--;
+    return true;
+}
+
+int myCircularQueueFront(MyCircularQueue* obj) {
+    if (obj -> size == 0) {
+        return -1;
+    }    
+    return obj -> arr[obj -> head];
+}
+
+int myCircularQueueRear(MyCircularQueue* obj) {
+    if (obj -> size == 0) {
+        return -1;
+    }    
+    return obj -> arr[(obj -> tail -1 + obj -> cap) % obj -> cap];
+}
+
+bool myCircularQueueIsEmpty(MyCircularQueue* obj) {
+    return obj -> size == 0;    
+}
+
+bool myCircularQueueIsFull(MyCircularQueue* obj) {
+    return obj -> size == obj -> cap;    
+}
+
+void myCircularQueueFree(MyCircularQueue* obj) {
+    free(obj -> arr);
+    free(obj);    
+}
