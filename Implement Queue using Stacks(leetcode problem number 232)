@@ -1,0 +1,77 @@
+typedef struct{
+    int *data;
+    int top;
+    int capacity;
+} Stack;
+
+Stack *createStack(int capacity) {
+    Stack *s = (Stack *)malloc(sizeof(Stack));
+    s -> data = (int *)malloc(sizeof(int) * capacity);
+    s -> top = -1;
+    s -> capacity = capacity;
+    return s;
+}
+
+void push(Stack *s, int x) {
+    if (s -> top + 1 < s -> capacity) {
+        s -> data[++s -> top] = x;
+    }
+}
+
+int pop(Stack *s) {
+    return s -> data[s -> top--];
+}
+
+int peek(Stack *s) {
+    return s -> data[s -> top];
+}
+
+bool isEmpty(Stack *s) {
+    return s -> top == -1;
+}
+
+typedef struct {
+    Stack *inStack;
+    Stack *outStack;
+} MyQueue;
+
+
+MyQueue* myQueueCreate() {
+    int capacity = 10000;
+    MyQueue *q = (MyQueue *)malloc(sizeof(MyQueue));
+    q -> inStack = createStack(capacity);
+    q -> outStack = createStack(capacity);
+    return q;    
+}
+
+void myQueuePush(MyQueue* obj, int x) {
+    push(obj -> inStack, x);    
+}
+
+int myQueuePop(MyQueue* obj) {
+    if(isEmpty(obj -> outStack)) {
+        while (!isEmpty(obj -> inStack)) {
+            push(obj -> outStack, pop(obj -> inStack));
+        }
+    } 
+    return pop(obj -> outStack);   
+}
+
+int myQueuePeek(MyQueue* obj) {
+    if(isEmpty(obj -> outStack)) {
+        while (!isEmpty(obj -> inStack)) {
+            push(obj -> outStack, pop(obj -> inStack));
+        }
+    } 
+    return peek(obj -> outStack);    
+}
+
+bool myQueueEmpty(MyQueue* obj) {
+    return isEmpty(obj -> inStack) && isEmpty(obj -> outStack);
+}
+
+void myQueueFree(MyQueue* obj) {
+    free(obj -> inStack);
+    free(obj -> outStack);
+    free(obj);    
+}
