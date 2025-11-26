@@ -1,0 +1,56 @@
+typedef struct {
+    int *data;
+    int top;
+    int capacity;
+} Stack;
+
+Stack *createStack(int capacity) {
+    Stack *s = (Stack *)malloc(sizeof(Stack));
+    s -> data = (int *)malloc(sizeof(int) * capacity);
+    s -> top = -1;
+    s -> capacity = capacity;
+    return s;
+}
+
+void push(Stack *s, int val) {
+    s -> data[++s -> top] = val;
+}
+
+int pop(Stack *s) {
+    return s -> data[s -> top--];
+}
+
+bool isOperator(const char *token) {
+    return (strcmp(token, "+") == 0 || strcmp(token, "-") == 0 || strcmp(token, "*") == 0 || strcmp(token, "/") == 0);
+}
+
+int evalRPN(char** tokens, int tokensSize) {
+    Stack *s = createStack(tokensSize);
+    for (int i = 0; i < tokensSize; ++i) {
+        char *token = tokens[i];
+        if (isOperator(token)) {
+            int b = pop(s);
+            int a = pop(s);
+            int result;
+            if (strcmp(token, "+") == 0) {
+                result = a + b;
+            }
+            else if (strcmp(token, "-") == 0) {
+                result = a - b;
+            }
+            else if (strcmp(token, "*") == 0) {
+                result = a * b;
+            }
+            else {
+                result = a / b;
+            }
+            push(s, result);
+        }
+        else {
+            push(s, atoi(token));
+        }
+    }
+    int finalResult = pop(s);
+    free(s);
+    return finalResult;
+}
