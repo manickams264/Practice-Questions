@@ -1,0 +1,86 @@
+#define MAXSIZE 10000
+typedef struct {
+    int data[MAXSIZE];
+    int front;
+    int rear;
+    int size;
+} Queue;
+
+Queue *createQueue() {
+    Queue *q = (Queue *)malloc(sizeof(Queue));
+    q -> front = 0;
+    q -> rear = -1;
+    q -> size = 0;
+    return q;
+}
+
+bool isEmpty(Queue *q) {
+    return q -> size == 0;
+}
+
+void enqueue(Queue *q, int x) {
+    if (q -> size == MAXSIZE) {
+        return;
+    }
+    q -> rear = (q -> rear + 1) % MAXSIZE;
+    q -> data[q -> rear] = x;
+    q -> size++;
+}
+
+int dequeue(Queue *q) {
+    if (isEmpty(q)) {
+        return -1;
+    }
+    int val = q -> data[q -> front];
+    q -> front = (q -> front + 1) % MAXSIZE;
+    q -> size--;
+    return val;
+}
+
+int top(Queue *q) {
+    if (isEmpty(q)) {
+        return -1;
+    }
+    return q -> data[q -> front];
+}
+
+typedef struct {
+    Queue *q1;
+    Queue *q2;
+} MyStack;
+
+
+MyStack* myStackCreate() {
+    MyStack *s = (MyStack *)malloc(sizeof(MyStack));
+    s -> q1 = createQueue();
+    s -> q2 = createQueue();
+    return s;    
+}
+
+void myStackPush(MyStack* obj, int x) {
+    enqueue(obj -> q2, x);
+    while (!isEmpty(obj -> q1)) {
+        enqueue(obj -> q2, dequeue(obj -> q1));
+    }
+    Queue *temp = obj -> q1;
+    obj -> q1 = obj -> q2;
+    obj -> q2 = temp;
+}
+
+int myStackPop(MyStack* obj) {
+    return dequeue(obj -> q1);    
+}
+
+int myStackTop(MyStack* obj) {
+    return top(obj -> q1);
+}
+
+bool myStackEmpty(MyStack* obj) {
+    return isEmpty(obj -> q1);    
+}
+
+void myStackFree(MyStack* obj) {
+    free(obj -> q1);
+    free(obj -> q2);
+    free(obj);
+}
