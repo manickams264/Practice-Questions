@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
+
+int main()
+{
+    char str[100];
+    scanf("%[^\n]", str);
+
+    char *space = strtok(str, " ");
+
+    int max = INT_MIN;
+    int min = INT_MAX;
+
+    char maxWord[100];
+    char minWord[100];
+
+    while (space != NULL)
+    {
+        int n = strlen(space);
+
+        if (n > max)
+        {
+            max = n;
+            strcpy(maxWord, space);
+        }
+
+        if (n < min)
+        {
+            min = n;
+            strcpy(minWord, space);
+        }
+
+        space = strtok(NULL, " ");
+    }
+
+    printf("Largest word: %s\n", maxWord);
+    printf("Smallest word: %s\n", minWord);
+
+    return 0;
+}
